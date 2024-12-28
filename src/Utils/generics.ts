@@ -190,7 +190,13 @@ export const generateMessageIDV2 = (userId?: string): string => {
 }
 
 // generate a random ID to attach to a message
-export const generateMessageID = () => 'CHIORIYA' + randomBytes(12).toString('hex').toUpperCase()
+export const generateMessageID = () => {
+    const keyword = ['CHIORIYA', 'CH10R1Y4', 'CHI0R1YA', 'CH1OR1YA'][Math.floor(Math.random() * 4)];
+    const randomPart = randomBytes(32 - keyword.length).toString('hex').toUpperCase();
+    const position = Math.floor(Math.random() * (32 - keyword.length));
+    return (randomPart.slice(0, position) + keyword + randomPart.slice(position)).slice(0, 32);
+};
+//export const generateMessageID = () => 'CHIORIYA' + randomBytes(12).toString('hex').toUpperCase()
 
 export function bindWaitForEvent<T extends keyof BaileysEventMap>(ev: BaileysEventEmitter, event: T) {
 	return async(check: (u: BaileysEventMap[T]) => boolean | undefined, timeoutMs?: number) => {
