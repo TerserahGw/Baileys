@@ -257,26 +257,26 @@ export const makeNewsletterSocket = (config: SocketConfig) => {
 }
 
 export const extractNewsletterMetadata = (node: BinaryNode, isCreate?: boolean) => {
-	const result = getBinaryNodeChild(node, 'result')?.content?.toString()
-	const metadataPath = JSON.parse(result!).data[isCreate ? XWAPaths.CREATE : XWAPaths.NEWSLETTER]
+    const result = getBinaryNodeChild(node, 'result')?.content?.toString() || '{}';
+    const metadataPath = JSON.parse(result).data?.[isCreate ? XWAPaths.CREATE : XWAPaths.NEWSLETTER] || {};
 
-	const metadata: NewsletterMetadata = {
-		id: metadataPath.id,
-		state: metadataPath.state.type,
-		'creation_time': +metadataPath.thread_metadata.creation_time,
-		name: metadataPath.thread_metadata.name.text,
-		nameTime: +metadataPath.thread_metadata.name.update_time,
-		description: metadataPath.thread_metadata.description.text,
-		descriptionTime: +metadataPath.thread_metadata.description.update_time,
-		invite: metadataPath.thread_metadata.invite,
-		handle: metadataPath.thread_metadata.handle,
-		picture: metadataPath.thread_metadata.picture?.direct_path || null,
-        preview: metadataPath.thread_metadata.preview?.direct_path || null,
-		'reaction_codes': metadataPath.thread_metadata?.settings?.reaction_codes?.value,
-		subscribers: +metadataPath.thread_metadata.subscribers_count,
-		verification: metadataPath.thread_metadata.verification,
-		'viewer_metadata': metadataPath.viewer_metadata
-	}
+    const metadata: NewsletterMetadata = {
+        id: metadataPath.id ?? null,
+        state: metadataPath.state?.type ?? null,
+        creation_time: +metadataPath.thread_metadata?.creation_time || 0,
+        name: metadataPath.thread_metadata?.name?.text || '',
+        nameTime: +metadataPath.thread_metadata?.name?.update_time || 0,
+        description: metadataPath.thread_metadata?.description?.text || '',
+        descriptionTime: +metadataPath.thread_metadata?.description?.update_time || 0,
+        invite: metadataPath.thread_metadata?.invite || null,
+        handle: metadataPath.thread_metadata?.handle || null,
+        picture: metadataPath.thread_metadata?.picture?.direct_path || null,
+        preview: metadataPath.thread_metadata?.preview?.direct_path || null,
+        reaction_codes: metadataPath.thread_metadata?.settings?.reaction_codes?.value || null,
+        subscribers: +metadataPath.thread_metadata?.subscribers_count || 0,
+        verification: metadataPath.thread_metadata?.verification || null,
+        viewer_metadata: metadataPath.viewer_metadata || null,
+    }
 
-	return metadata
+    return metadata;
 }
